@@ -13,10 +13,12 @@
     BOOL isAnimating;
 }
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) UIImageView *movingCell;
 @property (nonatomic) NSMutableArray* allIndexPath;
 @property (nonatomic) NSMutableArray* numbers;
 @property (nonatomic) NSMutableArray* numberWidths;
 @property (nonatomic) NSMutableArray* numberHeights;
+
 @end
 
 int num = 0;
@@ -25,12 +27,14 @@ int num = 0;
 
 - (void)viewDidLoad {
     [self datasInit];
+//    _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+//    _longPressGesture.delegate = self;
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
     
     RFQuiltLayout* layout = (id)[self.collectionView collectionViewLayout];
     layout.direction = UICollectionViewScrollDirectionVertical;
-    layout.blockPixels = CGSizeMake(75,75);
-    
+    layout.blockPixels = CGSizeMake(100,100);
+    layout.dataSource = self;
     [self.collectionView reloadData];
 }
 - (void)datasInit {
@@ -195,7 +199,7 @@ int num = 0;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetsForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return UIEdgeInsetsMake(2, 2, 2, 2);
+    return UIEdgeInsetsMake(10, 10, 10, 10);
 }
 
 #pragma mark - Helper methods
@@ -249,8 +253,7 @@ int num = 0;
 - (NSUInteger)randomLength
 {
     // always returns a random length between 1 and 3, weighted towards lower numbers.
-    NSUInteger result = arc4random() % 2 + 1;
-    return result;
+    NSUInteger result = arc4random() % 6;
     // 3/6 chance of it being 1.
     if (result <= 2)
     {
@@ -272,7 +275,7 @@ int num = 0;
 {
     // always returns a random length between 1 and 3, weighted towards lower numbers.
     NSUInteger result = arc4random() % 2 + 1;
-    return result * 2;
+    return result;
     // 3/6 chance of it being 1.
     if (result <= 2)
     {
@@ -289,5 +292,69 @@ int num = 0;
     }
     
     return result;
+}
+
+//-(void)handleLongPressGesture:(UIPanGestureRecognizer *)panRecognizer {
+//    
+//    CGPoint locationPoint = [panRecognizer locationInView:self.collectionView];
+//    
+//    if (panRecognizer.state == UIGestureRecognizerStateBegan) {
+//        
+//        NSIndexPath *indexPathOfMovingCell = [self.collectionView indexPathForItemAtPoint:locationPoint];
+//        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPathOfMovingCell];
+//        
+//        UIGraphicsBeginImageContext(cell.bounds.size);
+//        [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
+//        UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
+//        
+//        self.movingCell = [[UIImageView alloc] initWithImage:cellImage];
+//        [self.movingCell setCenter:locationPoint];
+//        [self.movingCell setAlpha:0.75f];
+//        [self.collectionView addSubview:self.movingCell];
+//        
+//    }
+//    
+//    if (panRecognizer.state == UIGestureRecognizerStateChanged) {
+//        [self.movingCell setCenter:locationPoint];
+//    }
+//    
+//    if (panRecognizer.state == UIGestureRecognizerStateEnded) {
+//        [self.movingCell removeFromSuperview];
+//    }
+//}
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath
+{
+//    if (indexPath.section == 0) {
+//        return NO;
+//    }
+    return YES;
+}
+- (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath
+{
+//    if (toIndexPath.section == 0) {
+//        return NO;
+//    }
+    return YES;
+}
+- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath
+{
+    NSInteger number = [[self.numbers objectAtIndex:fromIndexPath.item] integerValue];
+    NSInteger numberWidth = [[self.numberWidths objectAtIndex:fromIndexPath.item] integerValue];
+    NSInteger numberHeight = [[self.numberHeights objectAtIndex:fromIndexPath.item] integerValue];
+    
+    [self.numbers removeObjectAtIndex:fromIndexPath.item];
+    [self.numberWidths removeObjectAtIndex:fromIndexPath.item];
+    [self.numberHeights removeObjectAtIndex:fromIndexPath.item];
+    
+    [self.numbers insertObject:@(number) atIndex:toIndexPath.item];
+    [self.numberWidths insertObject:@(numberWidth) atIndex:toIndexPath.item];
+    [self.numberHeights insertObject:@(numberHeight) atIndex:toIndexPath.item];
+//    [self.numbers insertObject:@(num++) atIndex:index];
+//    [self.numberWidths insertObject:@(self.randomWidth) atIndex:index];
+//    [self.numberHeights insertObject:@(self.randomLength) atIndex:index];
+//    UIImage *image = [_photosArray objectAtIndex:fromIndexPath.item];
+//    [_photosArray removeObjectAtIndex:fromIndexPath.item];
+//    [_photosArray insertObject:image atIndex:toIndexPath.item];
 }
 @end
