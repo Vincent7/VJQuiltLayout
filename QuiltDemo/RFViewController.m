@@ -9,75 +9,119 @@
 #import "RFViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "VJCollectionViewTextContentCell.h"
-@interface RFViewController () <UICollectionViewDelegate> {
+#import "VJCollectionViewImageContentCell.h"
+@interface RFViewController () <UICollectionViewDelegate,VJResizableCollectionViewCellDelegate> {
     BOOL isAnimating;
 }
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) UIImageView *movingCell;
 @property (nonatomic) NSMutableArray* allIndexPath;
-@property (nonatomic) NSMutableArray* numbers;
-@property (nonatomic) NSMutableArray* numberWidths;
-@property (nonatomic) NSMutableArray* numberHeights;
+
+@property (nonatomic,strong) NSMutableArray <VJCollectionViewContentAndPointDataItem *> *dataItems;
+
+@property (nonatomic,strong) UIView *editToolBlock;
+//@property (nonatomic) NSMutableArray* numbers;
+//@property (nonatomic) NSMutableArray* numberWidths;
+//@property (nonatomic) NSMutableArray* numberHeights;
 
 @end
 
 int num = 0;
+@implementation UIImageView (RFViewController)
 
+- (void)setViewCopiedImage:(UIView *)view {
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 4.f);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    self.image = image;
+}
+
+@end
 @implementation RFViewController
 
 - (void)viewDidLoad {
     [self datasInit];
-//    _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-//    _longPressGesture.delegate = self;
+
     [self.collectionView registerClass:[VJCollectionViewTextContentCell class] forCellWithReuseIdentifier:@"cellID"];
     
     RFQuiltLayout* layout = (id)[self.collectionView collectionViewLayout];
     layout.direction = UICollectionViewScrollDirectionVertical;
-    layout.blockPixels = CGSizeMake(100,100);
+    layout.blockPixels = CGSizeMake(50,75);
     layout.dataSource = self;
     [self.collectionView reloadData];
+    self.collectionView.allowsSelection = YES;
+}
+
+- (UIView *)createEditToolBlock{
+    if (!self.editToolBlock) {
+        self.editToolBlock = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 150, 50)];
+        self.editToolBlock.backgroundColor = [UIColor blueColor];
+        
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = CGRectMake(0, 0, self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height);
+        maskLayer.fillRule = kCAFillRuleEvenOdd;
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height), NO, 0);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        
+        //draw hour hand
+        CGContextSetLineWidth(ctx, 1);
+        CGContextMoveToPoint(ctx, 0, 0);
+        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width, 0);
+        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height - 10);
+        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 + 10, self.editToolBlock.bounds.size.height - 10);
+        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 , self.editToolBlock.bounds.size.height);
+        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 - 10, self.editToolBlock.bounds.size.height - 10);
+        CGContextAddLineToPoint(ctx, 0, self.editToolBlock.bounds.size.height - 10);
+        CGContextAddLineToPoint(ctx, 0, 0);
+        
+        CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
+        CGContextFillPath(ctx);
+        maskLayer.contents = (id)UIGraphicsGetImageFromCurrentImageContext().CGImage;;
+        
+        self.editToolBlock.layer.mask = maskLayer;
+    }
+    return self.editToolBlock;
 }
 - (void)datasInit {
     num = 0;
-    self.numbers = [@[] mutableCopy];
-    self.numberWidths = @[].mutableCopy;
-    self.numberHeights = @[].mutableCopy;
+    self.dataItems = [@[] mutableCopy];
+
     for(; num<7; num++) {
-        [self.numbers addObject:@(num)];
         switch (num) {
             case 0:{
-                [self.numberWidths addObject:@(1)];
-                [self.numberHeights addObject:@(1)];
+                VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num andBlockSize:CGSizeMake(6, 1) andContent:@"Something I wanna type"];
+                [self.dataItems addObject:dataItem];
                 break;
             }
             case 1:{
-                [self.numberWidths addObject:@(1)];
-                [self.numberHeights addObject:@(2)];
+                VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num andBlockSize:CGSizeMake(3, 1) andContent:@"Something I wanna type2"];
+                [self.dataItems addObject:dataItem];
                 break;
             }
             case 2:{
-                [self.numberWidths addObject:@(1)];
-                [self.numberHeights addObject:@(3)];
+                VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num andBlockSize:CGSizeMake(2, 2) andContent:@"Something I wanna type3"];
+                [self.dataItems addObject:dataItem];
                 break;
             }
             case 3:{
-                [self.numberWidths addObject:@(1)];
-                [self.numberHeights addObject:@(1)];
+                VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num andBlockSize:CGSizeMake(6, 4) andContent:@"Something I wanna type4"];
+                [self.dataItems addObject:dataItem];
                 break;
             }
             case 4:{
-                [self.numberWidths addObject:@(2)];
-                [self.numberHeights addObject:@(1)];
+                VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num andBlockSize:CGSizeMake(2, 1) andContent:@"Something I wanna type5"];
+                [self.dataItems addObject:dataItem];
                 break;
             }
             case 5:{
-                [self.numberWidths addObject:@(3)];
-                [self.numberHeights addObject:@(1)];
+                VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num andBlockSize:CGSizeMake(3, 1) andContent:@"Something I wanna type6"];
+                [self.dataItems addObject:dataItem];
                 break;
             }
             case 6:{
-                [self.numberWidths addObject:@(1)];
-                [self.numberHeights addObject:@(4)];
+                VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num andBlockSize:CGSizeMake(2, 2) andContent:@"Something I wanna type7"];
+                [self.dataItems addObject:dataItem];
                 break;
             }
             case 7:{
@@ -107,13 +151,13 @@ int num = 0;
 
 - (IBAction)remove:(id)sender {
     
-    if (!self.numbers.count) {
+    if (!self.dataItems.count) {
         return;
     }
     
-    NSArray *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
-    NSIndexPath *toRemove = [visibleIndexPaths lastObject];
-    [self removeIndexPath:[NSIndexPath indexPathForRow:self.numbers.count inSection:0]];
+//    NSArray *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
+//    NSIndexPath *toRemove = [visibleIndexPaths lastObject];
+    [self removeIndexPath:[NSIndexPath indexPathForRow:self.dataItems.count inSection:0]];
 }
 
 - (IBAction)refresh:(id)sender {
@@ -122,16 +166,16 @@ int num = 0;
 }
 
 - (IBAction)add:(id)sender {
+
 //    NSArray *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
-    NSArray *visibleIndexPaths = [self.collectionView indexPathsForVisibleItems];
-    if (visibleIndexPaths.count == 0) {
-        NSLog(@"visibleIndexPaths.count = 0 %@",visibleIndexPaths);
+    if (self.dataItems.count == 0) {
+
         [self addIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
         return;
     }
-    NSIndexPath *toAdd = [NSIndexPath indexPathForRow:visibleIndexPaths.count-1 inSection:0];//[visibleIndexPaths lastObject];
+    NSIndexPath *toAdd = [NSIndexPath indexPathForRow:self.dataItems.count-1 inSection:0];//[visibleIndexPaths lastObject];
     NSLog(@"toAdd = 0 %@",toAdd);
-    [self addIndexPath:[NSIndexPath indexPathForRow:self.numbers.count-1 inSection:0]];
+    [self addIndexPath:toAdd];
 }
 
 - (UIColor*) colorForNumber:(NSNumber*)num {
@@ -142,19 +186,31 @@ int num = 0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self removeIndexPath:indexPath];
+
 }
 
 #pragma mark - UICollectionView Datasource
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
-    return self.numbers.count;
+    return self.dataItems.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    VJCollectionViewTextContentCell *cell = (VJCollectionViewTextContentCell*)[cv dequeueReusableCellWithReuseIdentifier:@"cellID" forIndexPath:indexPath];
-    cell.backgroundColor = [self colorForNumber:self.numbers[indexPath.row]];
     
+
+    VJCollectionViewContentAndPointDataItem *data = self.dataItems[indexPath.row];
+    id content = data.contentData;
+    if ([content isKindOfClass:[NSString class]]) {
+        VJCollectionViewTextContentCell *cell = (VJCollectionViewTextContentCell*)[cv dequeueReusableCellWithReuseIdentifier:@"cellID" forIndexPath:indexPath];
+        [cell.textLabel setText:(NSString *)content];
+        cell.delegate = self;
+        return cell;
+    }else{
+        VJCollectionViewImageContentCell *cell = (VJCollectionViewImageContentCell*)[cv dequeueReusableCellWithReuseIdentifier:@"cellID" forIndexPath:indexPath];
+        cell.delegate = self;
+        return cell;
+        //Image content
+    }
 //    UILabel* label = (id)[cell viewWithTag:5];
 //    if(!label) label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 20)];
 //    label.tag = 5;
@@ -163,7 +219,7 @@ int num = 0;
 //    label.backgroundColor = [UIColor clearColor];
 //    [cell addSubview:label];
     
-    return cell;
+    return nil;
 }
 
 
@@ -175,12 +231,12 @@ int num = 0;
 }
 
 -(CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout blockSizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.row >= self.numbers.count) {
-        NSLog(@"Asking for index paths of non-existant cells!! %ld from %lu cells", (long)indexPath.row, (unsigned long)self.numbers.count);
+    if(indexPath.row >= self.dataItems.count) {
+        NSLog(@"Asking for index paths of non-existant cells!! %ld from %lu cells", (long)indexPath.row, (unsigned long)self.dataItems.count);
     }
-    
-    CGFloat width = [[self.numberWidths objectAtIndex:indexPath.row] floatValue];
-    CGFloat height = [[self.numberHeights objectAtIndex:indexPath.row] floatValue];
+    VJCollectionViewContentAndPointDataItem *data = self.dataItems[indexPath.row];
+    CGFloat width = data.orderingInfo.itemWidth;
+    CGFloat height = data.orderingInfo.itemHeight;
     return CGSizeMake(width, height);
     
     //    if (indexPath.row % 10 == 0)
@@ -205,7 +261,7 @@ int num = 0;
 #pragma mark - Helper methods
 
 - (void)addIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row > self.numbers.count) {
+    if (indexPath.row > self.dataItems.count) {
         return;
     }
     
@@ -214,9 +270,12 @@ int num = 0;
     
     [self.collectionView performBatchUpdates:^{
         NSInteger index = indexPath.row+1;
-        [self.numbers insertObject:@(num++) atIndex:index];
-        [self.numberWidths insertObject:@(self.randomWidth) atIndex:index];
-        [self.numberHeights insertObject:@(self.randomLength) atIndex:index];
+        VJCollectionViewContentAndPointDataItem *dataItem = [[VJCollectionViewContentAndPointDataItem alloc]initWithIndex:num++ andBlockSize:CGSizeMake(self.randomWidth, self.randomLength) andContent:@"Something I wanna type7"];
+        [self.dataItems insertObject:dataItem atIndex:index];
+        
+//        [self.numbers insertObject:@(num++) atIndex:index];
+//        [self.numberWidths insertObject:@(self.randomWidth) atIndex:index];
+//        [self.numberHeights insertObject:@(self.randomLength) atIndex:index];
         [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
     } completion:^(BOOL done) {
         isAnimating = NO;
@@ -234,16 +293,15 @@ int num = 0;
 }
 
 - (void)removeIndexPath:(NSIndexPath *)indexPath {
-    if(!self.numbers.count || indexPath.row > self.numbers.count) return;
+    if(!self.dataItems.count || indexPath.row > self.dataItems.count) return;
     
     if(isAnimating) return;
     isAnimating = YES;
     
     [self.collectionView performBatchUpdates:^{
         NSInteger index = indexPath.row;
-        [self.numbers removeObjectAtIndex:index];
-        [self.numberWidths removeObjectAtIndex:index];
-        [self.numberHeights removeObjectAtIndex:index];
+        [self.dataItems removeObjectAtIndex:index];
+        
         [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
     } completion:^(BOOL done) {
         isAnimating = NO;
@@ -294,35 +352,7 @@ int num = 0;
     return result;
 }
 
-//-(void)handleLongPressGesture:(UIPanGestureRecognizer *)panRecognizer {
-//    
-//    CGPoint locationPoint = [panRecognizer locationInView:self.collectionView];
-//    
-//    if (panRecognizer.state == UIGestureRecognizerStateBegan) {
-//        
-//        NSIndexPath *indexPathOfMovingCell = [self.collectionView indexPathForItemAtPoint:locationPoint];
-//        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPathOfMovingCell];
-//        
-//        UIGraphicsBeginImageContext(cell.bounds.size);
-//        [cell.layer renderInContext:UIGraphicsGetCurrentContext()];
-//        UIImage *cellImage = UIGraphicsGetImageFromCurrentImageContext();
-//        UIGraphicsEndImageContext();
-//        
-//        self.movingCell = [[UIImageView alloc] initWithImage:cellImage];
-//        [self.movingCell setCenter:locationPoint];
-//        [self.movingCell setAlpha:0.75f];
-//        [self.collectionView addSubview:self.movingCell];
-//        
-//    }
-//    
-//    if (panRecognizer.state == UIGestureRecognizerStateChanged) {
-//        [self.movingCell setCenter:locationPoint];
-//    }
-//    
-//    if (panRecognizer.state == UIGestureRecognizerStateEnded) {
-//        [self.movingCell removeFromSuperview];
-//    }
-//}
+
 - (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 {
 //    if (indexPath.section == 0) {
@@ -340,22 +370,68 @@ int num = 0;
 
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath
 {
-    NSInteger number = [[self.numbers objectAtIndex:fromIndexPath.item] integerValue];
-    NSInteger numberWidth = [[self.numberWidths objectAtIndex:fromIndexPath.item] integerValue];
-    NSInteger numberHeight = [[self.numberHeights objectAtIndex:fromIndexPath.item] integerValue];
+    VJCollectionViewContentAndPointDataItem *dataItem = [self.dataItems objectAtIndex:fromIndexPath.item] ;
+
     
-    [self.numbers removeObjectAtIndex:fromIndexPath.item];
-    [self.numberWidths removeObjectAtIndex:fromIndexPath.item];
-    [self.numberHeights removeObjectAtIndex:fromIndexPath.item];
+    [self.dataItems removeObjectAtIndex:fromIndexPath.item];
     
-    [self.numbers insertObject:@(number) atIndex:toIndexPath.item];
-    [self.numberWidths insertObject:@(numberWidth) atIndex:toIndexPath.item];
-    [self.numberHeights insertObject:@(numberHeight) atIndex:toIndexPath.item];
-//    [self.numbers insertObject:@(num++) atIndex:index];
-//    [self.numberWidths insertObject:@(self.randomWidth) atIndex:index];
-//    [self.numberHeights insertObject:@(self.randomLength) atIndex:index];
-//    UIImage *image = [_photosArray objectAtIndex:fromIndexPath.item];
-//    [_photosArray removeObjectAtIndex:fromIndexPath.item];
-//    [_photosArray insertObject:image atIndex:toIndexPath.item];
+    [self.dataItems insertObject:dataItem atIndex:toIndexPath.item];
+    
+}
+
+-(void)showEditBlockAboveCell:(VJResizableCollectionViewCell *)collectionViewCell{
+
+    CGPoint cPoint = CGPointMake(collectionViewCell.bounds.origin.x + collectionViewCell.bounds.size.width/2,
+                                  - 30);
+    CGPoint pointAtScrollView = [self.collectionView convertPoint:cPoint fromView:collectionViewCell];
+
+    self.editToolBlock = [self createEditToolBlock];
+    
+    CGPoint pointMoved = pointAtScrollView;
+    if (pointMoved.x < self.editToolBlock.bounds.size.width/2 + 10) {
+        pointMoved.x = self.editToolBlock.bounds.size.width/2 + 10;
+    }
+    
+    if (pointMoved.x > self.collectionView.bounds.size.width - self.editToolBlock.bounds.size.width/2 - 10) {
+        pointMoved.x = self.collectionView.bounds.size.width - self.editToolBlock.bounds.size.width/2 - 10;
+    }
+    
+    if (pointMoved.y < self.editToolBlock.bounds.size.height/2 + 5) {
+        pointMoved.y = self.editToolBlock.bounds.size.height/2 + 5;
+    }
+    
+    self.editToolBlock.center = pointMoved;
+    
+//    UIImageView *tempEditBlockImageView = [[UIImageView alloc] initWithFrame:self.editToolBlock.frame];
+//    tempEditBlockImageView.backgroundColor = [UIColor yellowColor];
+//    tempEditBlockImageView.alpha = 0;
+//    [self.collectionView addSubview:tempEditBlockImageView];
+    
+    [self.collectionView addSubview:self.editToolBlock];
+    
+//    [UIView animateWithDuration:.3 animations:^{
+//        tempEditBlockImageView.alpha = 1;
+//    } completion:^(BOOL finished) {
+//        [tempEditBlockImageView removeFromSuperview];
+////        [self.collectionView addSubview:self.editToolBlock];
+//    }];
+    
+}
+
+-(void)disappearEditBlockAboveCell:(VJResizableCollectionViewCell *)collectionViewCell{
+    
+//    UIImageView *tempEditBlockImageView = [[UIImageView alloc] initWithFrame:self.editToolBlock.frame];
+//    tempEditBlockImageView.backgroundColor = [UIColor yellowColor];
+//    tempEditBlockImageView.alpha = 1;
+//    [self.collectionView addSubview:tempEditBlockImageView];
+////
+////    
+//    [UIView animateWithDuration:.3 animations:^{
+//        tempEditBlockImageView.alpha = 0;
+//    } completion:^(BOOL finished) {
+//        [tempEditBlockImageView removeFromSuperview];
+//        
+//    }];
+    [self.editToolBlock removeFromSuperview];
 }
 @end

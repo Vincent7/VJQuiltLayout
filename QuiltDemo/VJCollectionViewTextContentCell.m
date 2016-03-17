@@ -8,7 +8,9 @@
 
 #import "VJCollectionViewTextContentCell.h"
 
-@implementation VJCollectionViewTextContentCell
+@implementation VJCollectionViewTextContentCell{
+    CAShapeLayer *dottedLineLayer;
+}
 
 - (void)awakeFromNib {
     // Initialization code
@@ -39,5 +41,48 @@
         
     }
     return self;
+}
+
+-(void)setTextLabelEditable:(BOOL)editable{
+    
+    [self.textLabel setUserInteractionEnabled:editable];
+    [self.textLabel setEditable:editable];
+}
+
+-(void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
+    [dottedLineLayer removeFromSuperlayer];
+    dottedLineLayer = [self addDashedBorderWithColor:[UIColor blackColor].CGColor];
+    [self.layer addSublayer:dottedLineLayer];
+    if (selected) {
+        dottedLineLayer.lineWidth = 1.f;
+//        [self.layer setBorderWidth:5.0];
+        
+    }else {
+        dottedLineLayer.lineWidth = 0.f;
+//        [self.layer setBorderWidth:.0];
+    }
+}
+- (CAShapeLayer *) addDashedBorderWithColor: (CGColorRef) color {
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    
+    CGSize frameSize = self.bounds.size;
+    
+    CGRect shapeRect = CGRectMake(0.0f, 0.0f, frameSize.width, frameSize.height);
+    [shapeLayer setBounds:shapeRect];
+    [shapeLayer setPosition:CGPointMake( frameSize.width/2,frameSize.height/2)];
+    
+    [shapeLayer setFillColor:[[UIColor clearColor] CGColor]];
+    [shapeLayer setStrokeColor:color];
+    [shapeLayer setLineWidth:1.f];
+    [shapeLayer setLineJoin:kCALineJoinRound];
+    [shapeLayer setLineDashPattern:
+     [NSArray arrayWithObjects:[NSNumber numberWithInt:2],
+      [NSNumber numberWithInt:2],
+      nil]];
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:shapeRect cornerRadius:0];
+    [shapeLayer setPath:path.CGPath];
+    
+    return shapeLayer;
 }
 @end

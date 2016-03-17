@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "RFQuiltLayout.h"
-
+#import "VJCollectionViewContentAndPointDataItem.h"
 @interface RFViewController : UIViewController <RFQuiltLayoutDelegate,RFQuiltLayoutDataSource>
 
 @end

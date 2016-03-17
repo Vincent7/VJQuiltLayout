@@ -24,6 +24,10 @@
 		BF66D69B1C995A7800644F7D /* VJCollectionViewTextContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF66D6991C995A7800644F7D /* VJCollectionViewTextContentCell.xib */; };
 		BF66D69E1C9A446800644F7D /* VJResizableCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D69D1C9A446800644F7D /* VJResizableCollectionViewCell.m */; };
 		BF66D6A11C9A50EB00644F7D /* VJCollectionViewImageContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D6A01C9A50EB00644F7D /* VJCollectionViewImageContentCell.m */; };
+		BF66D6A41C9A534500644F7D /* VJCollectionViewContentAndPointDataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D6A31C9A534500644F7D /* VJCollectionViewContentAndPointDataItem.m */; };
+		BF66D6A71C9A53F500644F7D /* VJCollectionViewCellOrderInfoData.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D6A61C9A53F500644F7D /* VJCollectionViewCellOrderInfoData.m */; };
+		BF66D6AA1C9A566A00644F7D /* VJCollectionViewImageData.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D6A91C9A566A00644F7D /* VJCollectionViewImageData.m */; };
+		BF66D6AD1C9A569E00644F7D /* VJCollectionViewTextData.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D6AC1C9A569E00644F7D /* VJCollectionViewTextData.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +57,14 @@
 		BF66D69D1C9A446800644F7D /* VJResizableCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJResizableCollectionViewCell.m; sourceTree = "<group>"; };
 		BF66D69F1C9A50EB00644F7D /* VJCollectionViewImageContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJCollectionViewImageContentCell.h; sourceTree = "<group>"; };
 		BF66D6A01C9A50EB00644F7D /* VJCollectionViewImageContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJCollectionViewImageContentCell.m; sourceTree = "<group>"; };
+		BF66D6A21C9A534500644F7D /* VJCollectionViewContentAndPointDataItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJCollectionViewContentAndPointDataItem.h; sourceTree = "<group>"; };
+		BF66D6A31C9A534500644F7D /* VJCollectionViewContentAndPointDataItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJCollectionViewContentAndPointDataItem.m; sourceTree = "<group>"; };
+		BF66D6A51C9A53F500644F7D /* VJCollectionViewCellOrderInfoData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJCollectionViewCellOrderInfoData.h; sourceTree = "<group>"; };
+		BF66D6A61C9A53F500644F7D /* VJCollectionViewCellOrderInfoData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJCollectionViewCellOrderInfoData.m; sourceTree = "<group>"; };
+		BF66D6A81C9A566A00644F7D /* VJCollectionViewImageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJCollectionViewImageData.h; sourceTree = "<group>"; };
+		BF66D6A91C9A566A00644F7D /* VJCollectionViewImageData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJCollectionViewImageData.m; sourceTree = "<group>"; };
+		BF66D6AB1C9A569E00644F7D /* VJCollectionViewTextData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJCollectionViewTextData.h; sourceTree = "<group>"; };
+		BF66D6AC1C9A569E00644F7D /* VJCollectionViewTextData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJCollectionViewTextData.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +120,7 @@
 				02E25B1E168B74B0009CA089 /* RFViewController.h */,
 				02E25B1F168B74B0009CA089 /* RFViewController.m */,
 				02E25B21168B74B0009CA089 /* RFViewController.xib */,
+				BF66D6AE1C9A5C5300644F7D /* Model */,
 				02E25B0D168B74B0009CA089 /* Supporting Files */,
 			);
 			path = QuiltDemo;
@@ -148,6 +161,21 @@
 				BF66D6A01C9A50EB00644F7D /* VJCollectionViewImageContentCell.m */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		BF66D6AE1C9A5C5300644F7D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BF66D6A21C9A534500644F7D /* VJCollectionViewContentAndPointDataItem.h */,
+				BF66D6A31C9A534500644F7D /* VJCollectionViewContentAndPointDataItem.m */,
+				BF66D6A51C9A53F500644F7D /* VJCollectionViewCellOrderInfoData.h */,
+				BF66D6A61C9A53F500644F7D /* VJCollectionViewCellOrderInfoData.m */,
+				BF66D6A81C9A566A00644F7D /* VJCollectionViewImageData.h */,
+				BF66D6A91C9A566A00644F7D /* VJCollectionViewImageData.m */,
+				BF66D6AB1C9A569E00644F7D /* VJCollectionViewTextData.h */,
+				BF66D6AC1C9A569E00644F7D /* VJCollectionViewTextData.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,12 +247,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				02E25B13168B74B0009CA089 /* main.m in Sources */,
+				BF66D6AA1C9A566A00644F7D /* VJCollectionViewImageData.m in Sources */,
 				BF66D69A1C995A7800644F7D /* VJCollectionViewTextContentCell.m in Sources */,
 				BF66D6A11C9A50EB00644F7D /* VJCollectionViewImageContentCell.m in Sources */,
 				02E25B17168B74B0009CA089 /* RFAppDelegate.m in Sources */,
+				BF66D6A41C9A534500644F7D /* VJCollectionViewContentAndPointDataItem.m in Sources */,
 				02E25B20168B74B0009CA089 /* RFViewController.m in Sources */,
 				BF66D69E1C9A446800644F7D /* VJResizableCollectionViewCell.m in Sources */,
 				0239B55C168BB0F4008B8AD6 /* RFQuiltLayout.m in Sources */,
+				BF66D6A71C9A53F500644F7D /* VJCollectionViewCellOrderInfoData.m in Sources */,
+				BF66D6AD1C9A569E00644F7D /* VJCollectionViewTextData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

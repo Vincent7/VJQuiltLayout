@@ -17,5 +17,13 @@
     // Drawing code
 }
 */
-
+-(void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
+    [self.layer setBorderColor:[UIColor redColor].CGColor];
+    if (selected) {
+        [self.layer setBorderWidth:2.];
+    }else {
+        [self.layer setBorderWidth:0.];
+    }
+}
 @end

@@ -10,5 +10,5 @@
 #import "VJResizableCollectionViewCell.h"
 @interface VJCollectionViewTextContentCell : VJResizableCollectionViewCell
 @property (weak, nonatomic) IBOutlet UITextView *textLabel;
-
+- (void)setTextLabelEditable:(BOOL)editable;
 @end
