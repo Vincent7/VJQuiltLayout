@@ -5,7 +5,7 @@
 //  Created by Bryce Redd on 12/26/12.
 //  Copyright (c) 2012 Bryce Redd. All rights reserved.
 //
-
+#define EDITTOOLBLOCKHEIGHT 150
 #import "RFViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "VJCollectionViewTextContentCell.h"
@@ -20,6 +20,7 @@
 @property (nonatomic,strong) NSMutableArray <VJCollectionViewContentAndPointDataItem *> *dataItems;
 
 @property (nonatomic,strong) UIView *editToolBlock;
+@property (nonatomic,strong) CAShapeLayer *maskLayer;
 //@property (nonatomic) NSMutableArray* numbers;
 //@property (nonatomic) NSMutableArray* numberWidths;
 //@property (nonatomic) NSMutableArray* numberHeights;
@@ -53,34 +54,36 @@ int num = 0;
     self.collectionView.allowsSelection = YES;
 }
 
-- (UIView *)createEditToolBlock{
+- (UIView *)createEditToolBlockWithOffSet:(CGFloat)offset{
     if (!self.editToolBlock) {
-        self.editToolBlock = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 150, 50)];
+        self.editToolBlock = [[UIView alloc]initWithFrame:CGRectMake(0, 0, EDITTOOLBLOCKHEIGHT, 50)];
         self.editToolBlock.backgroundColor = [UIColor blueColor];
         
-        CAShapeLayer *maskLayer = [CAShapeLayer layer];
-        maskLayer.frame = CGRectMake(0, 0, self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height);
-        maskLayer.fillRule = kCAFillRuleEvenOdd;
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height), NO, 0);
-        CGContextRef ctx = UIGraphicsGetCurrentContext();
         
-        //draw hour hand
-        CGContextSetLineWidth(ctx, 1);
-        CGContextMoveToPoint(ctx, 0, 0);
-        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width, 0);
-        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height - 10);
-        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 + 10, self.editToolBlock.bounds.size.height - 10);
-        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 , self.editToolBlock.bounds.size.height);
-        CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 - 10, self.editToolBlock.bounds.size.height - 10);
-        CGContextAddLineToPoint(ctx, 0, self.editToolBlock.bounds.size.height - 10);
-        CGContextAddLineToPoint(ctx, 0, 0);
-        
-        CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
-        CGContextFillPath(ctx);
-        maskLayer.contents = (id)UIGraphicsGetImageFromCurrentImageContext().CGImage;;
-        
-        self.editToolBlock.layer.mask = maskLayer;
     }
+    [self.maskLayer removeFromSuperlayer];
+    self.maskLayer = [CAShapeLayer layer];
+    self.maskLayer.frame = CGRectMake(0, 0, self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height);
+    self.maskLayer.fillRule = kCAFillRuleEvenOdd;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height), NO, 0);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    //draw hour hand
+    CGContextSetLineWidth(ctx, 1);
+    CGContextMoveToPoint(ctx, 0, 0);
+    CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width, 0);
+    CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width, self.editToolBlock.bounds.size.height - 10);
+    CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 + 10 - offset, self.editToolBlock.bounds.size.height - 10);
+    CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 - offset , self.editToolBlock.bounds.size.height);
+    CGContextAddLineToPoint(ctx, self.editToolBlock.bounds.size.width/2 - 10 - offset, self.editToolBlock.bounds.size.height - 10);
+    CGContextAddLineToPoint(ctx, 0, self.editToolBlock.bounds.size.height - 10);
+    CGContextAddLineToPoint(ctx, 0, 0);
+    
+    CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
+    CGContextFillPath(ctx);
+    self.maskLayer.contents = (id)UIGraphicsGetImageFromCurrentImageContext().CGImage;;
+    
+    self.editToolBlock.layer.mask = self.maskLayer;
     return self.editToolBlock;
 }
 - (void)datasInit {
@@ -385,20 +388,28 @@ int num = 0;
                                   - 30);
     CGPoint pointAtScrollView = [self.collectionView convertPoint:cPoint fromView:collectionViewCell];
 
-    self.editToolBlock = [self createEditToolBlock];
+    CGFloat offset = 0;
     
     CGPoint pointMoved = pointAtScrollView;
-    if (pointMoved.x < self.editToolBlock.bounds.size.width/2 + 10) {
-        pointMoved.x = self.editToolBlock.bounds.size.width/2 + 10;
+    if (pointMoved.x < EDITTOOLBLOCKHEIGHT/2 + 10) {
+        offset = EDITTOOLBLOCKHEIGHT/2 + 10 - pointMoved.x;
+        pointMoved.x = EDITTOOLBLOCKHEIGHT/2 + 10;
+        
     }
     
-    if (pointMoved.x > self.collectionView.bounds.size.width - self.editToolBlock.bounds.size.width/2 - 10) {
-        pointMoved.x = self.collectionView.bounds.size.width - self.editToolBlock.bounds.size.width/2 - 10;
+    if (pointMoved.x > self.collectionView.bounds.size.width - EDITTOOLBLOCKHEIGHT/2 - 10) {
+        offset = pointMoved.x - self.collectionView.bounds.size.width - EDITTOOLBLOCKHEIGHT/2 - 10 ;
+        pointMoved.x = self.collectionView.bounds.size.width - EDITTOOLBLOCKHEIGHT/2 - 10;
+        
     }
     
     if (pointMoved.y < self.editToolBlock.bounds.size.height/2 + 5) {
         pointMoved.y = self.editToolBlock.bounds.size.height/2 + 5;
     }
+    
+    self.editToolBlock = [self createEditToolBlockWithOffSet:offset];
+    
+    
     
     self.editToolBlock.center = pointMoved;
     
