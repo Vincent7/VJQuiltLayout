@@ -25,7 +25,7 @@
                     </collectionViewLayout>
                     <cells/>
                     <connections>
-                        <outlet property="dataSource" destination="-1" id="15"/>
+                        <outlet property="dataSource" destination="-1" id="o5b-1g-Bgr"/>
                         <outlet property="delegate" destination="-1" id="16"/>
                     </connections>
                 </collectionView>

@@ -8,7 +8,7 @@
 
 #import "RFViewController.h"
 #import <QuartzCore/QuartzCore.h>
-
+#import "VJCollectionViewTextContentCell.h"
 @interface RFViewController () <UICollectionViewDelegate> {
     BOOL isAnimating;
 }
@@ -29,7 +29,7 @@ int num = 0;
     [self datasInit];
 //    _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
 //    _longPressGesture.delegate = self;
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+    [self.collectionView registerClass:[VJCollectionViewTextContentCell class] forCellWithReuseIdentifier:@"cellID"];
     
     RFQuiltLayout* layout = (id)[self.collectionView collectionViewLayout];
     layout.direction = UICollectionViewScrollDirectionVertical;
@@ -152,16 +152,16 @@ int num = 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    VJCollectionViewTextContentCell *cell = (VJCollectionViewTextContentCell*)[cv dequeueReusableCellWithReuseIdentifier:@"cellID" forIndexPath:indexPath];
     cell.backgroundColor = [self colorForNumber:self.numbers[indexPath.row]];
     
-    UILabel* label = (id)[cell viewWithTag:5];
-    if(!label) label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 20)];
-    label.tag = 5;
-    label.textColor = [UIColor blackColor];
-    label.text = [NSString stringWithFormat:@"%@", self.numbers[indexPath.row]];
-    label.backgroundColor = [UIColor clearColor];
-    [cell addSubview:label];
+//    UILabel* label = (id)[cell viewWithTag:5];
+//    if(!label) label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 20)];
+//    label.tag = 5;
+//    label.textColor = [UIColor blackColor];
+//    label.text = [NSString stringWithFormat:@"%@", self.numbers[indexPath.row]];
+//    label.backgroundColor = [UIColor clearColor];
+//    [cell addSubview:label];
     
     return cell;
 }
@@ -337,6 +337,7 @@ int num = 0;
 //    }
     return YES;
 }
+
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath
 {
     NSInteger number = [[self.numbers objectAtIndex:fromIndexPath.item] integerValue];

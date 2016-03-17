@@ -20,6 +20,10 @@
 		02E25B20168B74B0009CA089 /* RFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02E25B1F168B74B0009CA089 /* RFViewController.m */; };
 		02E25B23168B74B0009CA089 /* RFViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E25B21168B74B0009CA089 /* RFViewController.xib */; };
 		BF66D6951C9952D500644F7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF66D6941C9952D500644F7D /* QuartzCore.framework */; };
+		BF66D69A1C995A7800644F7D /* VJCollectionViewTextContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D6981C995A7800644F7D /* VJCollectionViewTextContentCell.m */; };
+		BF66D69B1C995A7800644F7D /* VJCollectionViewTextContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF66D6991C995A7800644F7D /* VJCollectionViewTextContentCell.xib */; };
+		BF66D69E1C9A446800644F7D /* VJResizableCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D69D1C9A446800644F7D /* VJResizableCollectionViewCell.m */; };
+		BF66D6A11C9A50EB00644F7D /* VJCollectionViewImageContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF66D6A01C9A50EB00644F7D /* VJCollectionViewImageContentCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +46,13 @@
 		02E25B1F168B74B0009CA089 /* RFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RFViewController.m; sourceTree = "<group>"; };
 		02E25B22168B74B0009CA089 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RFViewController.xib; sourceTree = "<group>"; };
 		BF66D6941C9952D500644F7D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		BF66D6971C995A7800644F7D /* VJCollectionViewTextContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJCollectionViewTextContentCell.h; sourceTree = "<group>"; };
+		BF66D6981C995A7800644F7D /* VJCollectionViewTextContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJCollectionViewTextContentCell.m; sourceTree = "<group>"; };
+		BF66D6991C995A7800644F7D /* VJCollectionViewTextContentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VJCollectionViewTextContentCell.xib; sourceTree = "<group>"; };
+		BF66D69C1C9A446800644F7D /* VJResizableCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJResizableCollectionViewCell.h; sourceTree = "<group>"; };
+		BF66D69D1C9A446800644F7D /* VJResizableCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJResizableCollectionViewCell.m; sourceTree = "<group>"; };
+		BF66D69F1C9A50EB00644F7D /* VJCollectionViewImageContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VJCollectionViewImageContentCell.h; sourceTree = "<group>"; };
+		BF66D6A01C9A50EB00644F7D /* VJCollectionViewImageContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VJCollectionViewImageContentCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +101,7 @@
 		02E25B0C168B74B0009CA089 /* QuiltDemo */ = {
 			isa = PBXGroup;
 			children = (
+				BF66D6961C995A2100644F7D /* View */,
 				02E25B29168B74C9009CA089 /* TVQuiltLayout */,
 				02E25B15168B74B0009CA089 /* RFAppDelegate.h */,
 				02E25B16168B74B0009CA089 /* RFAppDelegate.m */,
@@ -122,6 +134,20 @@
 				0239B55B168BB0F4008B8AD6 /* RFQuiltLayout.m */,
 			);
 			name = TVQuiltLayout;
+			sourceTree = "<group>";
+		};
+		BF66D6961C995A2100644F7D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BF66D69C1C9A446800644F7D /* VJResizableCollectionViewCell.h */,
+				BF66D69D1C9A446800644F7D /* VJResizableCollectionViewCell.m */,
+				BF66D6971C995A7800644F7D /* VJCollectionViewTextContentCell.h */,
+				BF66D6981C995A7800644F7D /* VJCollectionViewTextContentCell.m */,
+				BF66D6991C995A7800644F7D /* VJCollectionViewTextContentCell.xib */,
+				BF66D69F1C9A50EB00644F7D /* VJCollectionViewImageContentCell.h */,
+				BF66D6A01C9A50EB00644F7D /* VJCollectionViewImageContentCell.m */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -179,6 +205,7 @@
 				02E25B11168B74B0009CA089 /* InfoPlist.strings in Resources */,
 				02E25B19168B74B0009CA089 /* Default.png in Resources */,
 				02E25B1B168B74B0009CA089 /* Default@2x.png in Resources */,
+				BF66D69B1C995A7800644F7D /* VJCollectionViewTextContentCell.xib in Resources */,
 				02E25B1D168B74B0009CA089 /* Default-568h@2x.png in Resources */,
 				02E25B23168B74B0009CA089 /* RFViewController.xib in Resources */,
 			);
@@ -192,8 +219,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				02E25B13168B74B0009CA089 /* main.m in Sources */,
+				BF66D69A1C995A7800644F7D /* VJCollectionViewTextContentCell.m in Sources */,
+				BF66D6A11C9A50EB00644F7D /* VJCollectionViewImageContentCell.m in Sources */,
 				02E25B17168B74B0009CA089 /* RFAppDelegate.m in Sources */,
 				02E25B20168B74B0009CA089 /* RFViewController.m in Sources */,
+				BF66D69E1C9A446800644F7D /* VJResizableCollectionViewCell.m in Sources */,
 				0239B55C168BB0F4008B8AD6 /* RFQuiltLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
