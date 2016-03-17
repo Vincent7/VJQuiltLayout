@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, CollectionViewScrollDirction) {
 // relayout the same indexpaths while scrolling
 @property(nonatomic) NSIndexPath* lastIndexPathPlaced;
 
-
+@property (nonatomic, strong) UIView *cellMaskView;
 @property (nonatomic, strong) UIView *cellFakeView;
 @property (nonatomic, strong) CADisplayLink *displayLink;
 @property (nonatomic, assign) CollectionViewScrollDirction scrollDirection;
@@ -260,6 +260,106 @@ typedef NS_ENUM(NSInteger, CollectionViewScrollDirction) {
 }
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)longPress
 {
+//    switch (longPress.state) {
+//        case UIGestureRecognizerStateBegan: {
+//            //indexPath
+//            NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[longPress locationInView:self.collectionView]];
+//            //can move
+////            if ([self.collectionView.dataSource respondsToSelector:@selector(collectionView:canMoveItemAtIndexPath:)]) {
+////                if (![self.collectionView.dataSource collectionView:self.collectionView canMoveItemAtIndexPath:indexPath]) {
+////                    return;
+////                }
+////            }
+////            //will begin dragging
+////            if ([self.delegate respondsToSelector:@selector(collectionView:layout:willBeginDraggingItemAtIndexPath:)]) {
+////                [self.delegate collectionView:self.collectionView layout:self willBeginDraggingItemAtIndexPath:indexPath];
+////            }
+//            
+//            //indexPath
+//            _reorderingCellIndexPath = indexPath;
+//            CGSize currentSize = [self getBlockSizeForItemAtIndexPath:indexPath];
+//            CGSize changedSize = CGSizeMake(currentSize.width + 1, currentSize.height + 1);
+//
+//            self.collectionView.scrollsToTop = NO;
+//            
+//            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+//            _cellFakeView = [[UIView alloc] initWithFrame:cell.frame];
+//            _cellFakeView.layer.shadowColor = [UIColor blackColor].CGColor;
+//            _cellFakeView.layer.shadowOffset = CGSizeMake(0, 0);
+//            _cellFakeView.layer.shadowOpacity = .5f;
+//            _cellFakeView.layer.shadowRadius = 3.f;
+//            UIImageView *cellFakeImageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+//            UIImageView *highlightedImageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+//            cellFakeImageView.contentMode = UIViewContentModeScaleAspectFill;
+//            highlightedImageView.contentMode = UIViewContentModeScaleAspectFill;
+//            cellFakeImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//            highlightedImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//            cell.highlighted = YES;
+//            //            cell.backgroundColor = [UIColor whiteColor];
+//            [highlightedImageView setCellCopiedImage:cell];
+//            cell.highlighted = NO;
+//            [cellFakeImageView setCellCopiedImage:cell];
+//            [self.collectionView addSubview:_cellFakeView];
+//            [_cellFakeView addSubview:cellFakeImageView];
+//            [_cellFakeView addSubview:highlightedImageView];
+//            //set center
+//            _reorderingCellCenter = cell.center;
+//            _cellFakeViewCenter = _cellFakeView.center;
+//            //            [highlightedImageView setAlpha:0];
+//            [self invalidateLayout];
+//            //animation
+//            CGRect fakeViewRect = CGRectMake(cell.center.x - (cell.frame.size.width * 1.1 / 2.f), cell.center.y - (cell.frame.size.height * 1.1 / 2.f), cell.frame.size.width * 1.1, cell.frame.size.height * 1.1);
+//            [UIView animateWithDuration:.3f delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut animations:^{
+//                _cellFakeView.center = cell.center;
+//                _cellFakeView.frame = fakeViewRect;
+//                _cellFakeView.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
+//                highlightedImageView.alpha = 0;
+//            } completion:^(BOOL finished) {
+//                [highlightedImageView removeFromSuperview];
+//            }];
+//            //did begin dragging
+//            if ([self.delegate respondsToSelector:@selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]) {
+//                [self.delegate collectionView:self.collectionView layout:self didBeginDraggingItemAtIndexPath:indexPath];
+//            }
+//            break;
+//        }
+//        case UIGestureRecognizerStateEnded:
+//        case UIGestureRecognizerStateCancelled: {
+//            NSIndexPath *currentCellIndexPath = _reorderingCellIndexPath;
+//            //will end dragging
+//            if ([self.delegate respondsToSelector:@selector(collectionView:layout:willEndDraggingItemAtIndexPath:)]) {
+//                [self.delegate collectionView:self.collectionView layout:self willEndDraggingItemAtIndexPath:currentCellIndexPath];
+//            }
+//            
+//            //scrolls top on
+//            self.collectionView.scrollsToTop = YES;
+//            //disable auto scroll
+//            [self invalidateDisplayLink];
+//            //remove fake view
+//            UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:currentCellIndexPath];
+//            [UIView animateWithDuration:.3f delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut animations:^{
+//                _cellFakeView.transform = CGAffineTransformIdentity;
+//                _cellFakeView.frame = attributes.frame;
+//            } completion:^(BOOL finished) {
+//                [_cellFakeView removeFromSuperview];
+//                _cellFakeView = nil;
+//                _reorderingCellIndexPath = nil;
+//                _reorderingCellCenter = CGPointZero;
+//                _cellFakeViewCenter = CGPointZero;
+//                [self invalidateLayout];
+//                if (finished) {
+//                    //did end dragging
+//                    if ([self.delegate respondsToSelector:@selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]) {
+//                        [self.delegate collectionView:self.collectionView layout:self didEndDraggingItemAtIndexPath:currentCellIndexPath];
+//                    }
+//                }
+//            }];
+//            break;
+//        }
+//        default:
+//            break;
+//    }
+   
     switch (longPress.state) {
         case UIGestureRecognizerStateBegan: {
             //indexPath
@@ -281,6 +381,7 @@ typedef NS_ENUM(NSInteger, CollectionViewScrollDirction) {
             self.collectionView.scrollsToTop = NO;
             //cell fake view
             UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            
             _cellFakeView = [[UIView alloc] initWithFrame:cell.frame];
             _cellFakeView.layer.shadowColor = [UIColor blackColor].CGColor;
             _cellFakeView.layer.shadowOffset = CGSizeMake(0, 0);
@@ -293,18 +394,26 @@ typedef NS_ENUM(NSInteger, CollectionViewScrollDirction) {
             cellFakeImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             highlightedImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             cell.highlighted = YES;
+//            cell.backgroundColor = [UIColor whiteColor];
             [highlightedImageView setCellCopiedImage:cell];
+//            [highlightedImageView.layer setCornerRadius:10];
             cell.highlighted = NO;
             [cellFakeImageView setCellCopiedImage:cell];
             [self.collectionView addSubview:_cellFakeView];
             [_cellFakeView addSubview:cellFakeImageView];
             [_cellFakeView addSubview:highlightedImageView];
+
+            _cellMaskView = [[UIView alloc]initWithFrame:cell.bounds];
+            _cellMaskView.backgroundColor = [UIColor grayColor];
+            [cell addSubview:_cellMaskView];
+            
             //set center
             _reorderingCellCenter = cell.center;
             _cellFakeViewCenter = _cellFakeView.center;
+//            [highlightedImageView setAlpha:0];
             [self invalidateLayout];
             //animation
-            CGRect fakeViewRect = CGRectMake(cell.center.x - (50 / 2.f), cell.center.y - (50 / 2.f), 50, 50);
+            CGRect fakeViewRect = CGRectMake(cell.center.x - (cell.frame.size.width * 1.1 / 2.f), cell.center.y - (cell.frame.size.height * 1.1 / 2.f), cell.frame.size.width * 1.1, cell.frame.size.height * 1.1);
             [UIView animateWithDuration:.3f delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut animations:^{
                 _cellFakeView.center = cell.center;
                 _cellFakeView.frame = fakeViewRect;
@@ -342,6 +451,9 @@ typedef NS_ENUM(NSInteger, CollectionViewScrollDirction) {
                 _reorderingCellIndexPath = nil;
                 _reorderingCellCenter = CGPointZero;
                 _cellFakeViewCenter = CGPointZero;
+                
+                [_cellMaskView removeFromSuperview];
+                _cellMaskView = nil;
                 [self invalidateLayout];
                 if (finished) {
                     //did end dragging
@@ -355,6 +467,7 @@ typedef NS_ENUM(NSInteger, CollectionViewScrollDirction) {
         default:
             break;
     }
+    
 }
 - (void)handlePanGesture:(UIPanGestureRecognizer *)pan
 {
